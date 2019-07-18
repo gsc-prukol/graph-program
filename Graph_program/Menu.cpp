@@ -19,10 +19,8 @@ void support(HWND);
 bool exit(HWND hwnd);
 void graph_menu(HWND hwnd, bool oriented);
 void buttom(HWND hwnd,int x1, int y1, int x2, int y2, char * text, bool o);
-bool main_buttom_paint(HWND ,int);
+void main_buttom_paint(HWND ,int);
 void buttom_yn(HWND, bool);
-void simple(HWND hwnd) { graph_menu(hwnd, 0); };
-void oriented(HWND hwnd) { graph_menu(hwnd, 1); };
 int input_box(HWND hwnd, int x1, int y1, int x2, int y2, int post, int limit);
 int main_menu (HWND hwnd)
 {
@@ -86,7 +84,7 @@ int main_menu (HWND hwnd)
 		clear_windows(hwnd, 0, 0, 800, 600);
 	return fl2;
 }
-bool main_buttom_paint(HWND hwnd , int k)
+void main_buttom_paint(HWND hwnd , int k)
 {
 	bool a[4];
 	for (int i = 0; i < 4; i++)
@@ -96,7 +94,6 @@ bool main_buttom_paint(HWND hwnd , int k)
 	buttom(hwnd, LMM, 180, RMM, 280, "SIMPLE GRAPH", a[1]);
 	buttom(hwnd, LMM, 320, RMM, 420, "SUPPORT", a[2]);
 	buttom(hwnd, LMM, 460, RMM, 560, "EXIT", a[3]);
-
 }
 void buttom(HWND hwnd, int Left, int Top, int Right, int Bottom, char * text, bool o)
 {
@@ -151,6 +148,35 @@ void support(HWND hwnd)
 	MoveToEx(hdc, 50, 190, 0);
 	LineTo(hdc, 250, 190);
 	Ellipse(hdc, 227, 187, 233, 193);
+	TextOutA(hdc, 105, 200, "Active point", 13);
+	Ellipse(hdc, 140, 229, 146, 235);
+	TextOutA(hdc, 105, 220, "11", 2);
+	TextOutA(hdc, 100, 245, "Deactive point", 15);
+	SetTextColor(hdc, SIRIY2);
+	DeleteObject(p2);
+	p2 = CreatePen(0, 4, SIRIY2);
+	SelectObject(hdc, p2);
+	TextOutA(hdc, 105, 265, "11", 2);
+	Ellipse(hdc, 140, 269, 146, 275);
+	DeleteObject(p2);
+	p2 = CreatePen(0, 4, 0);
+	SelectObject(hdc, p2);
+	MoveToEx(hdc, 325, 0, 0);
+	LineTo(hdc, 325, 600);
+	MoveToEx(hdc, 325, 300, 0);
+	LineTo(hdc, 0, 300);
+	SetTextColor(hdc, BLACK);
+	TextOutA(hdc, 25, 325, "Institute for Applied Systems Analysis", 39);
+	TextOutA(hdc, 10, 350, "Department of mathematical analysis methods", 44);
+	TextOutA(hdc, 45, 375, "Coursework first year student", 30);
+	TextOutA(hdc, 75, 400, "Volodimir Volodko", 18);
+	TextOutA(hdc, 125, 525, "Kiev", 5);
+	TextOutA(hdc, 125, 550, "2017", 5);
+	buttom(hwnd, 375, 500, 750, 550, "EXIT", 1);
+	TextOutA(hdc, 375, 25, "Graph is a structure amounting to a set of objects in which some", 65);
+	TextOutA(hdc, 375, 50, "pairs of the objects are in some sense \"related\".", 50);
+	TextOutA(hdc, 375, 100, "Euler cycle - a cycle that contains each edge once.", 52);//If the image on the screen disappears, then click the arrow.
+	TextOutA(hdc, 375, 450, "If the image on the screen disappears, then click the arrow.", 61);
 	SelectObject(hdc, p1);
 	SelectObject(hdc, b1);
 	ReleaseDC(hwnd, hdc);
@@ -208,7 +234,7 @@ void buttom_yn(HWND hwnd, bool b)//b=0 yes - obrane
 }
 void graph_menu(HWND hwnd, bool oriented)
 {
-	bool exid = 1;
+	bool fl1 = 1;
 	int k = 0, mas[9], sms = -2 + oriented;
 	char ch;
 	graph * q;
@@ -221,7 +247,7 @@ void graph_menu(HWND hwnd, bool oriented)
 	q->paint(hwnd);
 	graph_buttom_paint(hwnd, k, mas);
 	message(hwnd, sms);
-	while (exid)
+	while (fl1)
 	{
 		Sleep(100);
 		if (_kbhit())
@@ -231,7 +257,7 @@ void graph_menu(HWND hwnd, bool oriented)
 			switch (ch)
 			{
 			case 27: {
-				exid = exit(hwnd);
+				fl1 = exit(hwnd);
 				break;
 			}
 			case 80:
@@ -466,7 +492,7 @@ void graph_menu(HWND hwnd, bool oriented)
 				}
 				case 11:
 				{
-					exid = exit(hwnd);
+					fl1 = exit(hwnd);
 					break;
 				}
 				case 12:
@@ -553,14 +579,13 @@ void graph_buttom_paint (HWND hwnd, int obrane, int m[])
 int input_box(HWND hwnd, int Left, int Top, int Right, int Bottom,int post, int limit) // limit > 9
 {
 	HDC hdc = GetDC(hwnd);
-	bool exid = 1;
 	char m[9], key ;
 	SetTextColor(hdc, RED);//так можешь сделать цвет текста
 	SetBkColor(hdc, SIRIY2);//так фон
 	sprintf_s(m, "%d", post, 8);
 	buttom(hwnd, Left, Top, Right, Bottom, "", 1);
 	TextOutA(hdc, Left + (Right - Left) / 2.0 - strlen(m)*3.5, Top + (Bottom - Top) / 2 - 9, m, strlen(m)+1);
-	while (exid)
+	while (1)
 	{
 		if (_kbhit())
 		{
